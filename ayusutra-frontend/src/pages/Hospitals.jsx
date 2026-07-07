@@ -68,7 +68,6 @@ function Hospitals() {
     );
   };
 
-  // Google Maps Navigation Redirect (Fixes "Get Directions")
   // Google Maps Navigation Redirect (Bypasses faulty database coordinate traps)
   const openDirections = (hospital) => {
     const origin = `${userLat},${userLng}`;
@@ -83,6 +82,17 @@ function Hospitals() {
     const destination = encodeURIComponent(searchString);
     
     window.open(`https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}`, '_blank');
+  };
+
+  // Triggers native WhatsApp sharing with a pre-formatted template
+  const shareOnWhatsApp = (hospital) => {
+    const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
+      [hospital.name, hospital.address || hospital.district, 'Karnataka'].filter(Boolean).join(', ')
+    )}`;
+    
+    const message = `🏥 *Hospital Detail from AyuSutra* 🏥\n\n*Name:* ${hospital.name}\n*Location:* ${hospital.address || hospital.district}\n${hospital.phoneNumber ? `*Contact:* ${hospital.phoneNumber}\n` : ''}\n📍 *Navigate via Google Maps:* ${mapsUrl}`;
+    
+    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`, '_blank');
   };
 
   // Run initial hardware location check on page load automatically
@@ -221,13 +231,6 @@ function Hospitals() {
               
               <div className="flex gap-2 text-[10px] font-bold items-center">
                 <span className="bg-blue-50 text-blue-600 px-2 py-0.5 rounded">{hospital.district}</span>
-                <button 
-                  type="button" 
-                  onClick={() => openDirections(hospital)} 
-                  className="text-neutral-500 hover:underline flex items-center gap-0.5"
-                >
-                  🗺️ Directions
-                </button>
               </div>
 
               {/* Specialties processing chip factory block */}
@@ -258,17 +261,31 @@ function Hospitals() {
               )}
             </div>
 
-            {/* Split Footer Navigation Action Trigger Buttons block */}
-            <div className="grid grid-cols-2 gap-2 mt-5 pt-3 border-t border-neutral-100">
-              <button 
-                type="button"
-                onClick={() => openDirections(hospital)}
-                className="bg-[#E07A5F] text-white py-2 rounded-xl text-xs font-bold shadow-sm hover:brightness-95 transition-all text-center"
+            {/* Structured Stack Footer Block */}
+            <div className="mt-5 pt-3 border-t border-neutral-100 space-y-2">
+              <div className="grid grid-cols-2 gap-2">
+                <button 
+                  type="button"
+                  onClick={() => openDirections(hospital)}
+                  className="bg-[#E07A5F] text-white py-2.5 rounded-xl text-xs font-bold shadow-sm hover:brightness-95 transition-all text-center flex items-center justify-center gap-1.5"
+                >
+                  <span>🧭</span> Get Directions
+                </button>
+                
+                <button 
+                  type="button"
+                  onClick={() => shareOnWhatsApp(hospital)}
+                  className="bg-[#25D366] text-white py-2.5 rounded-xl text-xs font-bold shadow-sm hover:brightness-95 transition-all text-center flex items-center justify-center gap-1.5"
+                >
+                  <span>💬</span> Share
+                </button>
+              </div>
+
+              <a 
+                href={`tel:${hospital.phoneNumber}`} 
+                className="bg-white border border-neutral-200 text-neutral-700 py-2.5 rounded-xl text-xs font-bold hover:bg-neutral-50 transition-all text-center block w-full"
               >
-                Get Directions
-              </button>
-              <a href={`tel:${hospital.phoneNumber}`} className="bg-white border border-neutral-200 text-neutral-700 py-2 rounded-xl text-xs font-bold hover:bg-neutral-50 transition-all text-center block">
-                Call
+                📞 Call
               </a>
             </div>
           </div>
