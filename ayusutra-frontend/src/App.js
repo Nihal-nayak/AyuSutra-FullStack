@@ -2,7 +2,7 @@ import React from 'react';
 import Diagnostics from './pages/Diagnostics';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import Home from './pages/Home';
-import Symptoms from './pages/Symptoms';
+import SymptomChecker from './pages/SymptomChecker';
 import Hospitals from './pages/Hospitals';
 import BloodBank from './pages/BloodBank';
 
@@ -88,7 +88,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             {/* Swapped hardcoded text with your actual functional component engines */}
-            <Route path="/symptoms" element={<Symptoms />} />
+            <Route path="/symptoms" element={<SymptomChecker />} />
             <Route path="/hospitals" element={<Hospitals />} />
 
             <Route path="/blood-bank" element={<BloodBank />} />
